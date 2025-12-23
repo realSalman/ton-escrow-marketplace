@@ -1,0 +1,58 @@
+{
+  "rules": {
+    "shopItems": {
+      ".read": true,
+      ".write": "auth != null",
+      ".indexOn": ["createdAt", "status"],
+      "$itemId": {
+        "wanted": {
+          ".read": true,
+          "$userId": {
+            ".write": "auth != null && $userId == auth.uid"
+          }
+        }
+      }
+    },
+    "orders": {
+      "$orderId": {
+        ".read": "auth != null && (root.child('orders').child($orderId).child('participants').hasChild(auth.uid) || root.child('orders').child($orderId).child('buyerId').val() == auth.uid || root.child('orders').child($orderId).child('sellerId').val() == auth.uid)",
+        ".write": "auth != null && (root.child('orders').child($orderId).child('participants').hasChild(auth.uid) || root.child('orders').child($orderId).child('buyerId').val() == auth.uid || root.child('orders').child($orderId).child('sellerId').val() == auth.uid)",
+        ".validate": "newData.hasChildren(['buyerId', 'sellerId', 'itemId']) && (newData.child('buyerId').val() == auth.uid || newData.child('sellerId').val() == auth.uid)"
+      }
+    },
+    "users": {
+      "$userId": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid == $userId"
+      }
+    },
+    "chats": {
+      ".read": "auth != null",
+      "$chatId": {
+        ".read": "auth != null && (!data.exists() || data.child('members').hasChild(auth.uid))",
+        ".write": "auth != null && (data.exists() && (data.child('members').hasChild(auth.uid) || newData.child('members').hasChild(auth.uid)) || !data.exists() && newData.child('members').hasChild(auth.uid))",
+        ".validate": "newData.hasChildren(['members', 'type', 'createdAt']) && newData.child('members').hasChild(auth.uid)",
+        "members": {
+          "$memberId": {
+            ".write": "auth != null && ($memberId == auth.uid || root.child('chats').child($chatId).child('members').hasChild(auth.uid))"
+          }
+        },
+        "messages": {
+          ".read": "auth != null && root.child('chats').child($chatId).child('members').hasChild(auth.uid)",
+          "$messageId": {
+            ".read": "auth != null && root.child('chats').child($chatId).child('members').hasChild(auth.uid)",
+            ".write": "auth != null && root.child('chats').child($chatId).child('members').hasChild(auth.uid) && (newData.child('senderId').val() == auth.uid || root.child('chats').child($chatId).child('members').hasChild(newData.child('senderId').val()))",
+            ".validate": "newData.hasChildren(['senderId', 'message', 'createdAt']) && (newData.child('senderId').val() == auth.uid || root.child('chats').child($chatId).child('members').hasChild(newData.child('senderId').val()))"
+          }
+        }
+      }
+    },
+    "orderWallets": {
+      "$orderId": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    }
+  }
+}
+
