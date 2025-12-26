@@ -110,7 +110,7 @@ export function ShopPage({
     }
   }, [isLoadingMore, hasMore, lastCreatedAt, searchTerm]);
 
-  // Infinite scroll: load more items when scrolling near bottom
+  // Infinite scroll
   useEffect(() => {
     const handleScroll = () => {
       if (isLoading || isLoadingMore || !hasMore) return;
