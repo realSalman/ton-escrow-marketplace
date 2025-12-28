@@ -36,7 +36,6 @@ export function CheckoutPage({ listing, onBack, onPaymentComplete }) {
   }, [open]);
 
   // Format wallet address first 6 and last 4 characters
-  // Uses user-friendly format (UQ prefix) like Tonkeeper
   const formatWalletAddress = useCallback((address) => {
     if (!address) return '';
     // Get user-friendly format (UQ prefix) like Tonkeeper uses
