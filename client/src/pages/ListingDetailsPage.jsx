@@ -110,7 +110,7 @@ export function ListingDetailsPage({
       return;
     }
     
-    // Strategy 2: Fallback - fetch seller profile from Firestore
+    // 2: Fallback - fetch seller profile from Firestore
     // This is for older listings that don't have denormalized seller info
     if (fullListing.sellerId) {
       setLoadingSeller(true);
