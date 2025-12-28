@@ -96,7 +96,7 @@ export function ListingDetailsPage({
       return;
     }
 
-    // Strategy 1: Check if seller info is already included in listing (denormalized)
+    // 1:Check if seller info is already included in listing (denormalized)
     // This is the preferred method as it avoids an extra database fetch
     // Check if we have denormalized seller info (sellerName is the key indicator)
     if (fullListing.sellerName) {
